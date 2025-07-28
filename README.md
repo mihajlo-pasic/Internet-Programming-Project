@@ -2,68 +2,62 @@
 
 ## Project Description
 
-ETFBL_IP is a comprehensive electric vehicle rental system developed for a fictional company specializing in renting electric cars, bicycles, and scooters. The system consists of three main applications:
-
-1. **Spring Boot Backend**: RESTful API serving all applications
-2. **Employee Web App**: Angular/Material admin dashboard
-3. **Customer Mobile App**: JSP-based mobile-friendly interface
-4. **Promotions App**: JSP-based marketing content management
+ETFBL_IP is a complete electric vehicle rental management system developed for the Faculty of Electrical Engineering. The system enables rental operations for electric cars, bicycles, and scooters through three specialized applications with role-based access control.
 
 ## Key Features
 
 ### Core Functionality
-- Multi-type vehicle management (cars, bikes, scooters)
-- Rental transaction processing
-- User management (customers and employees)
-- Maintenance tracking system
-- Promotion and marketing content management
+- **Multi-type vehicle management** (cars, bikes, scooters)
+- **Rental transaction processing** with PDF invoice generation
+- **User management** (customers and employees)
+- **Maintenance tracking system**
+- **Promotion and marketing content management**
+- **RSS feed** for latest promotions
 
 ### Technical Highlights
-- **Angular 15+** with Material Design components
+- **Angular 15+** with Material Design components for admin portal
 - **Spring Boot 3** REST API with JPA/Hibernate
 - **MySQL** relational database
 - **JSP** for customer-facing mobile interfaces
-- **RSS feed** for promotions
-- PDF invoice generation
-- Location tracking using coordinate system
+- **Location tracking** using coordinate system
+- **CSV import/export** for vehicle data
 
 ## System Components
 
 ### 1. Backend Services (Spring Boot)
-- Vehicle CRUD operations
-- Rental transaction processing
-- User authentication and authorization
-- Maintenance record management
-- Promotion content delivery
-- RSS feed generation
+- **Vehicle CRUD operations** with type-specific attributes
+- **Rental transaction processing** with document verification
+- **User authentication** and role-based authorization
+- **Maintenance record management**
+- **Promotion content delivery** with RSS feed
+- **PDF invoice generation**
 
 ### 2. Employee Portal (Angular)
 - **Admin Features**:
-  - Full vehicle management
+  - Full vehicle lifecycle management
   - Manufacturer CRUD operations
-  - User account management
-  - CSV import/export
+  - User account administration
+  - CSV data import/export
   
 - **Operator Features**:
-  - Rental monitoring
+  - Rental monitoring dashboard
   - Map view of vehicle locations
-  - Customer management
+  - Customer account management
   - Maintenance reporting
 
 - **Manager Features**:
-  - All admin/operator features plus:
-  - Financial statistics and charts
+  - Financial statistics and analytics
   - Pricing management
-  - Business analytics
+  - Business performance dashboards
 
 ### 3. Customer App (JSP)
-- Vehicle rental interface
+- Mobile-optimized rental interface
 - Profile management
-- Rental history
+- Rental history tracking
 - Payment processing
-- Location services
+- Location services integration
 
 ### 4. Promotions App (JSP)
 - Marketing content creation
-- Promotion management
-- Campaign scheduling
+- Campaign management
+- Promotion scheduling
