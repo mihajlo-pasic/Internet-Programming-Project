@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Dodaj novog zaposlenog</h2>
+<mat-dialog-content>
+    <form [formGroup]="employeeForm">
+        <mat-form-field>
+            <mat-label>Ime</mat-label>
+            <input matInput formControlName="ime">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Prezime</mat-label>
+            <input matInput formControlName="prezime">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Korisničko ime</mat-label>
+            <input matInput formControlName="korisnickoIme">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Lozinka</mat-label>
+            <input matInput type="password" formControlName="lozinka">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Uloga</mat-label>
+            <mat-select formControlName="uloga">
+                <mat-option value="ADMINISTRATOR">ADMINISTRATOR</mat-option>
+                <mat-option value="OPERATER">OPERATER</mat-option>
+                <mat-option value="MENADZER">MENADZER</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Radno mesto</mat-label>
+            <input matInput formControlName="radnoMjesto">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Otkaži</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!employeeForm.valid">Sačuvaj</button>
+</mat-dialog-actions>

@@ -1,0 +1,227 @@
+<h2>Prevozna Sredstva</h2>
+
+<!-- Dropdown za filtriranje po tipu prevoznog sredstva -->
+<mat-form-field>
+    <mat-label>Filtriraj po tipu</mat-label>
+    <mat-select [(ngModel)]="selectedType" (selectionChange)="loadVehicles()">
+        <mat-option value="AUTOMOBIL">Automobili</mat-option>
+        <mat-option value="BICIKL">Bicikli</mat-option>
+        <mat-option value="TROTINET">Trotineti</mat-option>
+    </mat-select>
+</mat-form-field>
+
+
+<!-- Pretraga po modelu -->
+<mat-form-field>
+    <mat-label>Pretraga po modelu</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup)="applyFilter()" placeholder="Unesite model">
+</mat-form-field>
+
+<!-- Tabela prevoznih sredstava -->
+<table mat-table [dataSource]="pagedVehicles" class="mat-elevation-z8">
+
+    <!-- Identifikator -->
+    <ng-container *ngIf="displayedColumns.includes('identifikator')" matColumnDef="identifikator">
+        <th mat-header-cell *matHeaderCellDef> Identifikator </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.identifikator }} </td>
+    </ng-container>
+
+    <!-- Tip -->
+    <ng-container *ngIf="displayedColumns.includes('tip')" matColumnDef="tip">
+        <th mat-header-cell *matHeaderCellDef> Tip </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.tip }} </td>
+    </ng-container>
+
+    <!-- Proizvođač -->
+    <ng-container *ngIf="displayedColumns.includes('proizvodjac')" matColumnDef="proizvodjac">
+        <th mat-header-cell *matHeaderCellDef> Proizvođač </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.proizvodjac?.naziv }} </td>
+    </ng-container>
+
+    <!-- Model -->
+    <ng-container *ngIf="displayedColumns.includes('model')" matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef> Model </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.model }} </td>
+    </ng-container>
+
+    <!-- Cena nabavke -->
+    <ng-container *ngIf="displayedColumns.includes('cijenaNabavke')" matColumnDef="cijenaNabavke">
+        <th mat-header-cell *matHeaderCellDef> Cena Nabavke </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.cijenaNabavke | currency:'EUR':'symbol':'1.2-2' }} </td>
+    </ng-container>
+
+    <!-- Datum nabavke (samo za automobile) -->
+    <ng-container *ngIf="displayedColumns.includes('datumNabavke')" matColumnDef="datumNabavke">
+        <th mat-header-cell *matHeaderCellDef> Datum Nabavke </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.datumNabavke | date }} </td>
+    </ng-container>
+
+    <!-- Opis (samo za automobile) -->
+    <ng-container *ngIf="displayedColumns.includes('opis')" matColumnDef="opis">
+        <th mat-header-cell *matHeaderCellDef> Opis </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.opis }} </td>
+    </ng-container>
+
+    <!-- Status -->
+    <ng-container *ngIf="displayedColumns.includes('status')" matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.status }} </td>
+    </ng-container>
+
+    <!-- Slika -->
+    <ng-container *ngIf="displayedColumns.includes('slika')" matColumnDef="slika">
+        <th mat-header-cell *matHeaderCellDef> Slika </th>
+        <td mat-cell *matCellDef="let vehicle">
+            <img *ngIf="vehicle.slika" [src]="vehicle.slika" alt="Slika vozila" width="50">
+        </td>
+    </ng-container>
+
+    <!-- Autonomija (samo za bicikle) -->
+    <ng-container *ngIf="displayedColumns.includes('autonomija')" matColumnDef="autonomija">
+        <th mat-header-cell *matHeaderCellDef> Autonomija (km) </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.autonomija }} km </td>
+    </ng-container>
+
+    <!-- Maksimalna brzina (samo za trotinet) -->
+    <ng-container *ngIf="displayedColumns.includes('maksimalnaBrzina')" matColumnDef="maksimalnaBrzina">
+        <th mat-header-cell *matHeaderCellDef> Max Brzina (km/h) </th>
+        <td mat-cell *matCellDef="let vehicle"> {{ vehicle.maksimalnaBrzina }} km/h </td>
+    </ng-container>
+
+    <!-- Akcije -->
+    <ng-container matColumnDef="akcije">
+        <th mat-header-cell *matHeaderCellDef> Akcije </th>
+        <td mat-cell *matCellDef="let vehicle">
+            <button mat-button color="primary" (click)="showDetails(vehicle)">Prikaži</button>
+            <button mat-button color="warn" (click)="deleteVehicle(vehicle.id)">Obriši</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+
+<!-- Paginacija -->
+<mat-paginator [length]="filteredVehicles.length" [pageSize]="pageSize" (page)="onPageChange($event)">
+</mat-paginator>
+
+<!-- Dugme za dodavanje novog prevoznog sredstva -->
+<button mat-raised-button color="primary" (click)="openDialog()">Dodaj Prevozno Sredstvo</button>
+
+<!-- Upload CSV fajla -->
+<input type="file" (change)="uploadCSV($event)">
+<button mat-raised-button color="accent" (click)="processCSV()">Obradi CSV</button>
+
+<div *ngIf="selectedVehicle" class="vehicle-details">
+    <h3>Detalji o Vozilu: {{ selectedVehicle.model }}</h3>
+    <p><strong>Identifikator:</strong> {{ selectedVehicle.identifikator }}</p>
+    <p><strong>Proizvođač:</strong> {{ selectedVehicle.proizvodjac?.naziv }}</p>
+    <p><strong>Cena Nabavke:</strong> {{ selectedVehicle.cijenaNabavke | currency:'EUR' }}</p>
+    <p><strong>Status:</strong> {{ selectedVehicle.status }}</p>
+    <img *ngIf="selectedVehicle.slika" [src]="selectedVehicle.slika" alt="Slika vozila" width="100">
+</div>
+
+<div *ngIf="selectedVehicle">
+    <h3>Kvarovi</h3>
+    <table mat-table [dataSource]="pagedFaults" class="mat-elevation-z8">
+
+        <!-- Opis Kvara -->
+        <ng-container matColumnDef="opis">
+            <th mat-header-cell *matHeaderCellDef> Opis </th>
+            <td mat-cell *matCellDef="let fault"> {{ fault.opis }} </td>
+        </ng-container>
+
+        <!-- Datum Vreme -->
+        <ng-container matColumnDef="datumVrijeme">
+            <th mat-header-cell *matHeaderCellDef> Datum i Vreme </th>
+            <td mat-cell *matCellDef="let fault"> {{ fault.datumVrijeme | date:'short' }} </td>
+        </ng-container>
+
+        <!-- Akcije za Kvarove -->
+        <ng-container matColumnDef="akcije">
+            <th mat-header-cell *matHeaderCellDef> Akcije </th>
+            <td mat-cell *matCellDef="let fault">
+                <button mat-button color="warn" (click)="deleteFault(fault.id)">Obriši</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['opis', 'datumVrijeme', 'akcije']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['opis', 'datumVrijeme', 'akcije'];"></tr>
+    </table>
+
+    <mat-paginator [length]="faults.length" [pageSize]="faultPageSize" (page)="onFaultPageChange($event)">
+    </mat-paginator>
+
+    <!-- Dugme za dodavanje kvara -->
+    <button mat-raised-button color="accent" (click)="openAddFaultDialog()">Dodaj Kvar</button>
+
+</div>
+
+<div *ngIf="selectedVehicle">
+    <h3>Iznajmljivanja</h3>
+    <table mat-table [dataSource]="pagedRentals" class="mat-elevation-z8">
+
+        <!-- Korisnik -->
+        <ng-container matColumnDef="korisnik">
+            <th mat-header-cell *matHeaderCellDef> Korisnik </th>
+            <td mat-cell *matCellDef="let rental"> {{ rental.korisnik?.ime }} {{ rental.korisnik?.prezime }} </td>
+        </ng-container>
+
+        <!-- Datum početka -->
+        <ng-container matColumnDef="datumPocetka">
+            <th mat-header-cell *matHeaderCellDef> Datum Početka </th>
+            <td mat-cell *matCellDef="let rental"> {{ rental.datumPocetka | date:'short' }} </td>
+        </ng-container>
+
+        <!-- Datum zavrsetka -->
+        <ng-container matColumnDef="datumZavrsetka">
+            <th mat-header-cell *matHeaderCellDef> Datum Završetka </th>
+            <td mat-cell *matCellDef="let rental"> {{ rental.datumZavrsetka | date:'short' }} </td>
+        </ng-container>
+
+        <!-- Lokacija Preuzimanja -->
+        <ng-container matColumnDef="lokacijaPreuzimanja">
+            <th mat-header-cell *matHeaderCellDef> Lokacija Preuzimanja </th>
+            <td mat-cell *matCellDef="let rental"> {{ rental.lokacijaPreuzimanja }} </td>
+        </ng-container>
+        <!-- Lokacija Vraćanja -->
+        <ng-container matColumnDef="lokacijaVracanja">
+            <th mat-header-cell *matHeaderCellDef> Lokacija Vraćanja </th>
+            <td mat-cell *matCellDef="let rental">
+                {{ rental.lokacijaVracanja ? rental.lokacijaVracanja : 'N/A' }}
+            </td>
+        </ng-container>
+
+        <!-- Trajanje -->
+        <ng-container matColumnDef="trajanje">
+            <th mat-header-cell *matHeaderCellDef> Trajanje </th>
+            <td mat-cell *matCellDef="let rental">
+                {{ rental.trajanje ? rental.trajanje + ' min' : 'N/A' }}
+            </td>
+        </ng-container>
+
+        <!-- Identifikacioni Dokument -->
+        <ng-container matColumnDef="identifikacioniDokument">
+            <th mat-header-cell *matHeaderCellDef> ID Dokument </th>
+            <td mat-cell *matCellDef="let rental">
+                {{ rental.identifikacioniDokument ? rental.identifikacioniDokument : 'N/A' }}
+            </td>
+        </ng-container>
+
+        <!-- Vozačka Dozvola -->
+        <ng-container matColumnDef="vozackaDozvola">
+            <th mat-header-cell *matHeaderCellDef> Vozačka Dozvola </th>
+            <td mat-cell *matCellDef="let rental">
+                {{ rental.vozackaDozvola ? rental.vozackaDozvola : 'N/A' }}
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsRental"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsRental;"></tr>
+    </table>
+
+    <mat-paginator [length]="rentals.length" [pageSize]="rentalPageSize" (page)="onRentalPageChange($event)">
+    </mat-paginator>
+</div>

@@ -1,0 +1,47 @@
+<h2>Pregled Klijenata</h2>
+
+<mat-form-field>
+    <mat-label>Pretraga po imenu ili prezimenu</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup)="applyFilter()" placeholder="Pretraga">
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="ime">
+        <th mat-header-cell *matHeaderCellDef> Ime </th>
+        <td mat-cell *matCellDef="let client"> {{ client.ime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="prezime">
+        <th mat-header-cell *matHeaderCellDef> Prezime </th>
+        <td mat-cell *matCellDef="let client"> {{ client.prezime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let client"> {{ client.email || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="brojTelefona">
+        <th mat-header-cell *matHeaderCellDef> Broj Telefona </th>
+        <td mat-cell *matCellDef="let client"> {{ client.brojTelefona || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="blokiran">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let client"> {{ client.blokiran ? 'Blokiran' : 'Aktivan' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="akcije">
+        <th mat-header-cell *matHeaderCellDef> Akcije </th>
+        <td mat-cell *matCellDef="let client">
+            <button mat-button [color]="client.blokiran ? 'primary' : 'warn'" (click)="toggleBlock(client)">
+                {{ client.blokiran ? 'Odblokiraj' : 'Blokiraj' }}
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

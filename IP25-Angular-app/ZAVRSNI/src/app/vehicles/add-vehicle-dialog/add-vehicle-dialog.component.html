@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>Dodaj Prevozno Sredstvo</h2>
+<mat-dialog-content>
+    <form [formGroup]="vehicleForm">
+
+        <mat-form-field appearance="fill">
+            <mat-label>Identifikator</mat-label>
+            <input matInput formControlName="identifikator">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Proizvođač</mat-label>
+            <mat-select formControlName="proizvodjacId">
+                <mat-option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
+                    {{ manufacturer.naziv }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+            <mat-label>Model</mat-label>
+            <input matInput formControlName="model">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Cijena Nabavke</mat-label>
+            <input matInput type="number" formControlName="cijenaNabavke" min="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="SLOBODNO">Slobodno</mat-option>
+                <mat-option value="POKVARENO">Pokvareno</mat-option>
+                <mat-option value="IZNAJMLJENO">Iznajmljeno</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+            <mat-label>Slika (URL)</mat-label>
+            <input matInput formControlName="slika">
+        </mat-form-field>
+
+        <!-- Polja specifična za AUTOMOBIL -->
+        <div *ngIf="vehicleForm.get('tip')?.value === 'AUTOMOBIL'">
+            <mat-form-field appearance="fill">
+                <mat-label>Datum Nabavke</mat-label>
+                <input matInput type="date" formControlName="datumNabavke">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Opis</mat-label>
+                <textarea matInput formControlName="opis"></textarea>
+            </mat-form-field>
+        </div>
+
+        <!-- Polja specifična za BICIKL -->
+        <div *ngIf="vehicleForm.get('tip')?.value === 'BICIKL'">
+            <mat-form-field appearance="fill">
+                <mat-label>Autonomija (km)</mat-label>
+                <input matInput type="number" formControlName="autonomija" min="0">
+            </mat-form-field>
+        </div>
+
+        <!-- Polja specifična za TROTINET -->
+        <div *ngIf="vehicleForm.get('tip')?.value === 'TROTINET'">
+            <mat-form-field appearance="fill">
+                <mat-label>Maksimalna Brzina (km/h)</mat-label>
+                <input matInput type="number" formControlName="maksimalnaBrzina" min="0">
+            </mat-form-field>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Otkaži</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!vehicleForm.valid">Sačuvaj</button>
+</mat-dialog-actions>

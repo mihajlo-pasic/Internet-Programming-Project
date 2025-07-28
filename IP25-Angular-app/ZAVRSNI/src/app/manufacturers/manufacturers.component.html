@@ -1,0 +1,57 @@
+<h2>Proizvođači</h2>
+
+<mat-form-field class="full-width">
+    <mat-label>Pretraga</mat-label>
+    <input matInput [(ngModel)]="searchQuery" placeholder="Unesite naziv">
+</mat-form-field>
+
+<table mat-table [dataSource]="applyFilter().slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)"
+    class="mat-elevation-z8">
+    <ng-container matColumnDef="naziv">
+        <th mat-header-cell *matHeaderCellDef> Naziv </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.naziv }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="drzava">
+        <th mat-header-cell *matHeaderCellDef> Država </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.drzava }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="adresa">
+        <th mat-header-cell *matHeaderCellDef> Adresa </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.adresa }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="kontakt_telefon">
+        <th mat-header-cell *matHeaderCellDef> Telefon </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.kontaktTelefon }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="kontakt_fax">
+        <th mat-header-cell *matHeaderCellDef> FAX </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.kontaktFax }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="kontakt_email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let proizvodjac"> {{ proizvodjac.kontaktEmail }} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="akcije">
+        <th mat-header-cell *matHeaderCellDef> Akcije </th>
+        <td mat-cell *matCellDef="let proizvodjac">
+            <button mat-icon-button color="accent" (click)="openDialog(proizvodjac)">✏</button>
+            <button mat-icon-button color="warn" (click)="deleteProizvodjac(proizvodjac.id)">🗑</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [length]="applyFilter().length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+    (page)="onPageChange($event)">
+</mat-paginator>
+
+<button mat-raised-button color="primary" (click)="openDialog()">Dodaj Proizvođača</button>

@@ -1,0 +1,105 @@
+<h2>Korisnici</h2>
+
+<!-- Dropdown filter -->
+<mat-form-field>
+    <mat-label>Filtriraj po ulozi</mat-label>
+    <mat-select [(ngModel)]="selectedRole" (selectionChange)="applyFilter()">
+        <mat-option value="KLIJENT">Klijenti</mat-option>
+        <mat-option value="ZAPOSLENI">Zaposleni</mat-option>
+    </mat-select>
+</mat-form-field>
+
+<!-- Pretraga po imenu -->
+<mat-form-field>
+    <mat-label>Pretraga</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup)="applyFilter()" placeholder="Pretraži po imenu">
+</mat-form-field>
+
+<!-- PRIKAZ KLIJENATA -->
+<table *ngIf="selectedRole === 'KLIJENT'" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="ime">
+        <th mat-header-cell *matHeaderCellDef> Ime </th>
+        <td mat-cell *matCellDef="let user"> {{ user.ime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="prezime">
+        <th mat-header-cell *matHeaderCellDef> Prezime </th>
+        <td mat-cell *matCellDef="let user"> {{ user.prezime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="uloga">
+        <th mat-header-cell *matHeaderCellDef> Uloga </th>
+        <td mat-cell *matCellDef="let user"> {{ user.uloga }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="brojLicneKarte">
+        <th mat-header-cell *matHeaderCellDef> Broj lične karte </th>
+        <td mat-cell *matCellDef="let user"> {{ user.brojLicneKarte || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let user"> {{ user.email || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="brojTelefona">
+        <th mat-header-cell *matHeaderCellDef> Broj telefona </th>
+        <td mat-cell *matCellDef="let user"> {{ user.brojTelefona || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="akcije">
+        <th mat-header-cell *matHeaderCellDef> Akcije </th>
+        <td mat-cell *matCellDef="let user">
+            <button mat-button [color]="user.blokiran ? 'primary' : 'warn'" (click)="toggleBlock(user)">
+                {{ user.blokiran ? 'Odblokiraj' : 'Blokiraj' }}
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row
+        *matHeaderRowDef="['ime', 'prezime', 'uloga', 'brojLicneKarte', 'email', 'brojTelefona', 'akcije']"></tr>
+    <tr mat-row
+        *matRowDef="let row; columns: ['ime', 'prezime', 'uloga', 'brojLicneKarte', 'email', 'brojTelefona', 'akcije'];">
+    </tr>
+</table>
+<mat-paginator *ngIf="selectedRole === 'KLIJENT'" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+<!-- PRIKAZ ZAPOSLENIH -->
+<table *ngIf="selectedRole === 'ZAPOSLENI'" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="ime">
+        <th mat-header-cell *matHeaderCellDef> Ime </th>
+        <td mat-cell *matCellDef="let user"> {{ user.ime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="prezime">
+        <th mat-header-cell *matHeaderCellDef> Prezime </th>
+        <td mat-cell *matCellDef="let user"> {{ user.prezime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="uloga">
+        <th mat-header-cell *matHeaderCellDef> Uloga </th>
+        <td mat-cell *matCellDef="let user"> {{ user.uloga }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="radnoMjesto">
+        <th mat-header-cell *matHeaderCellDef> Radno Mjesto </th>
+        <td mat-cell *matCellDef="let user"> {{ user.radnoMjesto || 'N/A' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="akcije">
+        <th mat-header-cell *matHeaderCellDef> Akcije </th>
+        <td mat-cell *matCellDef="let user">
+            <button mat-button color="primary" (click)="editUser(user)">Uredi</button>
+            <button mat-button color="warn" (click)="deleteUser(user.id)">Obriši</button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['ime', 'prezime', 'uloga', 'radnoMjesto', 'akcije']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['ime', 'prezime', 'uloga', 'radnoMjesto', 'akcije'];"></tr>
+</table>
+<mat-paginator *ngIf="selectedRole === 'ZAPOSLENI'" [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons></mat-paginator>
+<button *ngIf="selectedRole === 'ZAPOSLENI'" mat-raised-button color="primary" (click)="openAddEmployeeDialog()">Dodaj
+    Zaposlenog</button>

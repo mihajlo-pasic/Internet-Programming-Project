@@ -1,0 +1,19 @@
+mat-form-field {
+    width: 100%;
+    margin-bottom: 16px; // Dodaje razmak između polja
+}
+
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; // Dodaje razmak između elemenata
+}
+
+mat-dialog-actions {
+    justify-content: flex-end; // Poravnava dugmad na desnu stranu
+}
+
+h2[mat-dialog-title] {
+    font-size: 24px;
+    margin-bottom: 16px;
+}

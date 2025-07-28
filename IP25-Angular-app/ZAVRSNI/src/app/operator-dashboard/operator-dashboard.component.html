@@ -1,0 +1,20 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Operator Panel</h2>
+        <nav>
+            <ul>
+                <li><a routerLink="/operator-dashboard/rentals">Pregled Iznajmljivanja</a></li>
+                <li><a routerLink="/operator-dashboard/vehicles-map">Pregled Prevoznih Sredstava</a></li>
+                <li><a routerLink="/operator-dashboard/clients">Pregled Klijenata</a></li>
+                <li><a routerLink="/operator-dashboard/add-fault">Unos Kvara</a></li>
+                <li><a (click)="logout()" style="color: red; cursor: pointer;">Odjavi se</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

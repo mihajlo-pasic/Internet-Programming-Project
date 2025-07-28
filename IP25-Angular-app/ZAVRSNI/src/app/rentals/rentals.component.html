@@ -1,0 +1,53 @@
+<h2>Pregled Iznajmljivanja</h2>
+<table mat-table [dataSource]="pagedRentals" class="mat-elevation-z8">
+    <ng-container matColumnDef="identifikator">
+        <th mat-header-cell *matHeaderCellDef> Identifikator </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.prevoznoSredstvo?.identifikator }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="korisnik">
+        <th mat-header-cell *matHeaderCellDef> Korisnik </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.korisnik?.ime }} {{ rental.korisnik?.prezime }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="datumPocetka">
+        <th mat-header-cell *matHeaderCellDef> Datum Početka </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.datumPocetka | date:'short' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="datumZavrsetka">
+        <th mat-header-cell *matHeaderCellDef> Datum Završetka </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.datumZavrsetka | date:'short' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lokacijaPreuzimanja">
+        <th mat-header-cell *matHeaderCellDef> Lokacija Preuzimanja </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.lokacijaPreuzimanja }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lokacijaVracanja">
+        <th mat-header-cell *matHeaderCellDef> Lokacija Vraćanja </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.lokacijaVracanja }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trajanje">
+        <th mat-header-cell *matHeaderCellDef> Trajanje </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.trajanje }}s </td>
+    </ng-container>
+
+    <ng-container matColumnDef="identifikacioniDokument">
+        <th mat-header-cell *matHeaderCellDef> ID Dokument </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.identifikacioniDokument }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="vozackaDozvola">
+        <th mat-header-cell *matHeaderCellDef> Vozačka Dozvola </th>
+        <td mat-cell *matCellDef="let rental"> {{ rental.vozackaDozvola }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [length]="rentals.length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"></mat-paginator>
